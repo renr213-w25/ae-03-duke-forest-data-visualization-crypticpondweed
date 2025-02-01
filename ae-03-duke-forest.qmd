@@ -1,5 +1,6 @@
 ---
 title: "AE 03: Duke Forest + data visualization"
+name: Solomiya Kucharyshyn
 ---
 
 ```{r}
@@ -8,6 +9,8 @@ title: "AE 03: Duke Forest + data visualization"
 
 library(tidyverse)
 library(openintro)
+install.packages('paletteer') 
+library(paletteer)
 ```
 
 ## Exercise 1
@@ -25,8 +28,9 @@ Luckily, you can help them answer this question with data visualization!
 #| label: garage
 #| eval: false
 
-duke_forest |>
-  mutate(garage = if_else(str_detect(parking, "Garage"),   "Garage", "No garage"))
+duke_mutate <- duke_forest |>
+  mutate(garage = if_else(str_detect(parking, "Garage"), "Garage", "No garage"))
+glimpse(duke_mutate)
 ```
 
 -   Then, facet by `garage` and use different colors for the two facets.
@@ -37,10 +41,22 @@ duke_forest |>
 ```{r}
 #| label: price-garage
 
-# add code here
+ggplot(duke_mutate, aes(y= price, fill=garage))+
+  scale_fill_paletteer_d("fishualize::Acanthurus_olivaceus")+
+  geom_histogram(binwidth = 50000) +
+  facet_wrap(~garage) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(y="Price",
+       x="",
+       title= "Cost of Houses With or Without A Garage"
+       )+
+  theme_bw() +
+  theme(legend.position = "none") 
+  
+
 ```
 
-Add narrative here...
+There are more houses without garages available for sale than with garages overall. Houses with garages follow roughly the same distribution of cost as houses without garages, with a few differences at ~400,000 and at 1,200,000 having more houses available with garages at those pricepoints. 
 
 ::: callout-important
 Now is a good time to render, commit, and push.
@@ -67,10 +83,26 @@ Once again, data visualization skills to the rescue!
 ```{r}
 #| label: price-area
 
-# add code here
+ggplot(duke_forest, aes(x=price, y=area, color=year_built)) +
+  geom_smooth(se = FALSE, color = "grey", alpha = 0.2) +
+  geom_point() +
+  scale_color_paletteer_c("viridis::viridis") +
+  scale_x_continuous(labels = scales::comma)+
+  labs(x="Price ($)",
+       y="Area",
+       color="Year Built",
+       title="House Prices in Duke Forest by Size And Price")+
+  theme_classic()
 ```
 
-Add narrative here...
+*Claim 1: Larger houses are priced higher.*
+Yes, we do see a trend that larger houses have higher prices. 
+
+*Claim 2: Newer houses are priced higher.*
+No, there is not a signifcant trend for newer houses being priced higher. The newest builds are in the middle of the distibution. 
+
+*Claim 3: Bigger and more expensive houses tend to be newer ones than smaller and cheaper ones.*
+Again, not a significant trend. 
 
 ::: callout-important
 Now is a good time to render, commit, and push.
