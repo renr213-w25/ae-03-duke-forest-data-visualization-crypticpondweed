@@ -83,10 +83,26 @@ Once again, data visualization skills to the rescue!
 ```{r}
 #| label: price-area
 
-# add code here
+ggplot(duke_forest, aes(x=price, y=area, color=year_built)) +
+  geom_smooth(se = FALSE, color = "grey", alpha = 0.2) +
+  geom_point() +
+  scale_color_paletteer_c("viridis::viridis") +
+  scale_x_continuous(labels = scales::comma)+
+  labs(x="Price ($)",
+       y="Area",
+       color="Year Built",
+       title="House Prices in Duke Forest by Size And Price")+
+  theme_classic()
 ```
 
-Add narrative here...
+*Claim 1: Larger houses are priced higher.*
+Yes, we do see a trend that larger houses have higher prices. 
+
+*Claim 2: Newer houses are priced higher.*
+No, there is not a signifcant trend for newer houses being priced higher. The newest builds are in the middle of the distibution. 
+
+*Claim 3: Bigger and more expensive houses tend to be newer ones than smaller and cheaper ones.*
+Again, not a significant trend. 
 
 ::: callout-important
 Now is a good time to render, commit, and push.
